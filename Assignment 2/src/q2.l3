@@ -1,0 +1,97 @@
+(define caar (lambda(p) (car(car p))))
+(define cdar (lambda(p) (cdr(car p))))
+
+
+(define append 
+  (lambda(lst1 lst2)
+      (if (eq? lst1 '()) 
+      lst2
+      (cons (car lst1) 
+            (append(cdr lst1) lst2))))
+  )
+
+(define reverse 
+  (lambda (lst)
+        (if (eq? lst '())
+        '()
+    
+     (append (reverse (cdr lst)) (list (car lst)))
+  )
+  )
+)
+
+(define dup
+  (lambda (lst num2)
+    (if (eq? num2 0)
+        '()
+    (if (eq? num2 1)
+        lst
+        (dup (append (list(car lst)) lst) (- num2 1))))))
+
+(define duplicate-items
+   (lambda(lst dup-count)
+      (if (eq? lst '())
+          lst
+          (append (dup (list(car lst)) (car dup-count)) (duplicate-items (cdr lst) (append (cdr dup-count) (list(car dup-count))))))
+     )
+  )
+
+(define payment
+  (lambda (sum coins-lst)
+    (paymentHelp sum (counter coins-lst))))
+
+(define paymentHelp
+  (lambda (sum coins-lst)
+    (if(< sum 0)
+       0
+     (if(= sum 0)
+       1
+     (if(eq? coins-lst '())
+        0
+     (if(eq? (caar coins-lst) 0)
+        (paymentHelp sum (cdr coins-lst))
+     (+ (paymentHelp (- sum (cdar coins-lst)) (decrese coins-lst)) (paymentHelp sum (cdr coins-lst)))))))
+    )
+  )
+
+(define counter
+    (lambda (lst) 
+        (if (eq? lst '())
+         '()
+        (cons (cons (countHelp (car lst) lst) (car lst))
+              (counter (delete (car lst) lst))))
+    )
+)
+
+(define countHelp
+  (lambda(x lst)
+        (if(eq? lst '())
+           0
+        (if(eq? x (car lst))
+           (+ 1 (countHelp x (cdr lst)))
+        (countHelp x (cdr lst))))
+    )
+  )
+
+(define delete
+  (lambda (item lst)
+    (if(eq? lst '())
+       '()
+     (if(eq? item (car lst))
+        (delete item (cdr lst))
+     (cons (car lst) (delete item (cdr lst)))))
+    )
+  )
+
+(define decrese
+  (lambda (coins-list)
+    (cons (cons (- (caar coins-list) 1) (cdar coins-list)) (cdr coins-list))))    
+
+(define compose-n
+  (lambda (f n)
+  (if (= n 1)
+      f
+      (lambda (x) (f ((compose-n f (- n 1)) x)))
+      )
+    )
+  )
